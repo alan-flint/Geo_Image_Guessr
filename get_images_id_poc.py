@@ -53,6 +53,7 @@ def get_valid_pano_ids(api_key, europe_df, country_name, n_valid):
     params = {
         "radius": 1000,
         "key": api_key,
+        "source": "outdoor"
     }
     country_list = []
     pano_ids = set()
@@ -64,13 +65,11 @@ def get_valid_pano_ids(api_key, europe_df, country_name, n_valid):
             params["location"] = f"{lat},{long}"
             r = requests.get(metadata, params=params)
             j = r.json()
-            if j['status'] == 'OK':
-                p_id = j['pano_id']
-                if p_id not in pano_ids:
-                    pano_ids.add(p_id)
-                    geo_location = [country_name, j['location']['lat'],
-                                    j['location']['lng'], p_id]
-                    country_list.append(geo_location)
+            if j['status'] == 'OK' and j['pano_id'] not in pano_ids:
+                pano_ids.add(j['pano_id'])
+                geo_location = [country_name, j['location']['lat'],
+                                j['location']['lng'], j['pano_id']]
+                country_list.append(geo_location)
     return country_list
 
 
@@ -81,7 +80,7 @@ if __name__ == "__main__":
 
     full_list = []
     for country in ['Spain', 'France', 'Italy']:
-        country_ids = get_valid_pano_ids(GOOGLE_KEY, europe_data, country, 1000)
+        country_ids = get_valid_pano_ids(GOOGLE_KEY, europe_data, country, 5)
         full_list.extend(country_ids)
         print(f"{country} done.")
 
