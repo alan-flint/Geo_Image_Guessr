@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     full_list = []
     for country in ['Spain', 'France', 'Italy']:
-        country_ids = get_valid_pano_ids(GOOGLE_KEY, europe_data, country, 5)
+        country_ids = get_valid_pano_ids(GOOGLE_KEY, europe_data, country, 1000)
         full_list.extend(country_ids)
         print(f"{country} done.")
 
